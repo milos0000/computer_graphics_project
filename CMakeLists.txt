@@ -55,4 +55,3 @@ foreach(SHADER ${SHADERS})
     # file(COPY ${SHADER} DESTINATION ${CMAKE_SOURCE_DIR}/bin/${PROJECT_NAME}/shaders)
     watch(${SHADER})
 endforeach()
-

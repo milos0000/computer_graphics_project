@@ -27,7 +27,7 @@ class Camera {
     }
 public:
     float Zoom = 45.f;
-    float MovementSpeed = 2.5f;
+    float MovementSpeed = 7.5f;
     float Yaw = -90.0f;
     float Pitch = 0.0f;
     float MouseSensitivity = 0.1f;
@@ -48,7 +48,7 @@ public:
 
     void ProcessKeyboard(Direction direction, float deltaTime) {
         float velocity = MovementSpeed * deltaTime;
-       switch (direction) {
+        switch (direction) {
            case FORWARD: {
               Position += Front * velocity;
            }break;
