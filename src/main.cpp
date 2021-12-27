@@ -164,38 +164,50 @@ int main() {
     // build and compile shaders
     // -------------------------
     Shader platformShader("resources/shaders/platform.vs", "resources/shaders/platform.fs");
-    Shader lightShader("resources/shaders/2.model_lighting.vs", "resources/shaders/2.model_lighting.fs");
+    Shader cupShader("resources/shaders/cups_lighting.vs", "resources/shaders/cups_lighting.fs");
 
     float platformVertices[] = {
-            -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-            0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+            0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
+            0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+            //0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+            -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
+            //-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
 
-            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-            0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-            0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-            -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+            0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
+            0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+            //0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+            -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
+            //-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
 
-            -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-            -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+            -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+            -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+            -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+            //-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+            -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+            //-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
 
-            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-            0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-            0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+            0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+            0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+            0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+            //0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+            0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+            //0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
 
-            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-            0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-            0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
+            0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
+            0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+            //0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
+            //-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
 
-            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-            -0.5f,  0.5f,  0.5f,  0.0f, 0.0f
+            -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
+            0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
+            0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+            //0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+            -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f
+            //-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
     };
 
     unsigned int platformIndices [] = {
@@ -226,17 +238,27 @@ int main() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, platformEBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(platformIndices), platformIndices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(0));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(0));
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
+
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-    unsigned int platformTexture = load2DTexture(FileSystem::getPath("resources/textures/metal.png").c_str());
-    platformShader.setInt("Texture1", 0);
+    platformShader.use();
+    unsigned int platformDiffuse = load2DTexture(FileSystem::getPath("resources/textures/Stylized_Crate_002_basecolor.jpg").c_str());
+    platformShader.setInt("material.diffuse", 0);
+    unsigned int platformSpecular = load2DTexture(FileSystem::getPath("resources/textures/Stylized_Crate_002_metallic.jpg").c_str());
+    platformShader.setInt("material.specular", 1);
+
+    cupShader.use();
+    unsigned int cupsDiffuse = load2DTexture(FileSystem::getPath("resources/objects/cup/coffee_cup.jpg").c_str());
+    cupShader.setInt("material.texture_diffuse1", 2);
     // load models
     // -----------
     Model cupModel("resources/objects/cup/coffee_cup.obj");
@@ -244,7 +266,7 @@ int main() {
 
     PointLight& pointLight = programState->pointLight;
     pointLight.position = glm::vec3(4.0f, 4.0, 0.0);
-    pointLight.ambient = glm::vec3(0.1, 0.1, 0.1);
+    pointLight.ambient = glm::vec3(0.3, 0.3, 0.3);
     pointLight.diffuse = glm::vec3(0.6, 0.6, 0.6);
     pointLight.specular = glm::vec3(1.0, 1.0, 1.0);
 
@@ -275,7 +297,46 @@ int main() {
         // ------
         glClearColor(programState->clearColor.r, programState->clearColor.g, programState->clearColor.b, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        cupShader.use();
+        pointLight.position = glm::vec3(4.0f, 4.0f, 4.0f);
+        cupShader.setVec3("pointLight.position", pointLight.position);
+        cupShader.setVec3("pointLight.ambient", pointLight.ambient);
+        cupShader.setVec3("pointLight.diffuse", pointLight.diffuse);
+        cupShader.setVec3("pointLight.specular", pointLight.specular);
+        cupShader.setFloat("pointLight.constant", pointLight.constant);
+        cupShader.setFloat("pointLight.linear", pointLight.linear);
+        cupShader.setFloat("pointLight.quadratic", pointLight.quadratic);
+        cupShader.setVec3("viewPosition", programState->camera.Position);
+        cupShader.setFloat("material.shininess", 3.0f);
+        cupShader.setVec3("material.texture_specular1", 0.1f, 0.1f, 0.1f);
+        // view/projection transformations
+        glm::mat4 projection = glm::perspective(glm::radians(programState->camera.Zoom),
+                                                (float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 view = programState->camera.GetViewMatrix();
+        cupShader.setMat4("projection", projection);
+        cupShader.setMat4("view", view);
+
+        // render the loaded model
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model,
+                               programState->cupPosition); // translate it down so it's at the center of the scene
+        model = glm::scale(model, glm::vec3(programState->cupScale));    // it's a bit too big for our scene, so scale it down
+        cupShader.setMat4("model", model);
+
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, cupsDiffuse);
+
+        cupModel.Draw(cupShader);
+
         platformShader.use();
+
+        platformShader.setVec3("light.position", pointLight.position);
+        platformShader.setVec3("light.ambient", pointLight.ambient);
+        platformShader.setVec3("light.diffuse", pointLight.diffuse);
+        platformShader.setVec3("light.specular", pointLight.specular);
+        platformShader.setVec3("viewPos", programState->camera.Position);
+        platformShader.setFloat("material.shininess", 3.0f);
 
         glm::mat4 platformModel         = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
         glm::mat4 platformView          = glm::mat4(1.0f);
@@ -291,36 +352,13 @@ int main() {
         platformShader.setMat4("projection", platformProjection);
 
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, platformTexture);
+        glBindTexture(GL_TEXTURE_2D, platformDiffuse);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, platformSpecular);
 
         // don't forget to enable shader before setting uniforms
         glBindVertexArray(platformVAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-        lightShader.use();
-        pointLight.position = glm::vec3(4.0f, 4.0f, 4.0f);
-        lightShader.setVec3("pointLight.position", pointLight.position);
-        lightShader.setVec3("pointLight.ambient", pointLight.ambient);
-        lightShader.setVec3("pointLight.diffuse", pointLight.diffuse);
-        lightShader.setVec3("pointLight.specular", pointLight.specular);
-        lightShader.setFloat("pointLight.constant", pointLight.constant);
-        lightShader.setFloat("pointLight.linear", pointLight.linear);
-        lightShader.setFloat("pointLight.quadratic", pointLight.quadratic);
-        lightShader.setVec3("viewPosition", programState->camera.Position);
-        lightShader.setFloat("material.shininess", 32.0f);
-        // view/projection transformations
-        glm::mat4 projection = glm::perspective(glm::radians(programState->camera.Zoom),
-                                                (float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f, 100.0f);
-        glm::mat4 view = programState->camera.GetViewMatrix();
-        lightShader.setMat4("projection", projection);
-        lightShader.setMat4("view", view);
-
-        // render the loaded model
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model,
-                               programState->cupPosition); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(programState->cupScale));    // it's a bit too big for our scene, so scale it down
-        lightShader.setMat4("model", model);
-        cupModel.Draw(lightShader);
 
         if (programState->ImGuiEnabled)
             DrawImGui(programState);

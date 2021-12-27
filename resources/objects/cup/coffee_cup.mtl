@@ -40,4 +40,4 @@ d 1.000000
 illum 2
 
 map_Kd coffee_cup.jpg
-map_Ks cap_roughness.jpeg
+map_Ks coffee_cup_specular.jpeg
