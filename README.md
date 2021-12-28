@@ -1,11 +1,17 @@
-# project_base
-Prazan projekat sa pratećim bibliotekama koje koristimo na času. 
+# OpenGL Scene Project 
+Project done for the computer graphics university course (Mathematical Faculty, University of Belgrade)
 
-# Uputstvo
+# instructions
 1. `git clone https://github.com/matf-racunarska-grafika/project_base.git`
-2. CLion -> Open -> path/to/my/project_base
-3. Main se nalazi u src/main.cpp
-4. Cpp fajlovi idu u src folder
-5. Zaglavlja (h i hpp) fajlovi idu u include
-6. Šejderi idu u folder shaders. `Vertex shader` ima ekstenziju `.vs`, `fragment shader` ima ekstenziju `.fs`
-7. ALT+SHIFT+F10 -> project_base -> run
+2. CLion -> Open -> path/cups_for_2pac
+3. Main -> src/main.cpp
+4. ALT+SHIFT+F10 -> project_base -> run
+
+# controls
+1. WASD for moving the camera 
+2. F for turning the spotlight
+3. F1 for turning the ImGui
+
+# credits
+Coffee cup - abringo
+
