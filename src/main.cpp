@@ -317,9 +317,9 @@ int main() {
 
     PointLight& pointLight = programState->pointLight;
     pointLight.position = glm::vec3(4.0f, 4.0, 0.0);
-    pointLight.ambient = glm::vec3(0.3, 0.3, 0.3);
-    pointLight.diffuse = glm::vec3(0.6, 0.6, 0.6);
-    pointLight.specular = glm::vec3(1.0, 1.0, 1.0);
+    pointLight.ambient = glm::vec3(0.5, 0.5, 0.5);
+    pointLight.diffuse = glm::vec3(1.0, 1.0, 1.0);
+    pointLight.specular = glm::vec3(1.5, 1.5, 1.5);
 
     pointLight.constant = 1.0f;
     pointLight.linear = 0.09f;
@@ -359,7 +359,7 @@ int main() {
         cupShader.setFloat("pointLight.linear", pointLight.linear);
         cupShader.setFloat("pointLight.quadratic", pointLight.quadratic);
         cupShader.setVec3("viewPosition", programState->camera.Position);
-        cupShader.setFloat("material.shininess", 3.0f);
+        cupShader.setFloat("material.shininess", 12.0f);
         cupShader.setVec3("material.texture_specular1", 0.1f, 0.1f, 0.1f);
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(programState->camera.Zoom),
@@ -395,7 +395,7 @@ int main() {
         platformShader.setFloat("pointLight.linear", pointLight.linear);
         platformShader.setFloat("pointLight.quadratic", pointLight.quadratic);
         platformShader.setVec3("viewPos", programState->camera.Position);
-        platformShader.setFloat("material.shininess", 3.0f);
+        platformShader.setFloat("material.shininess", 32.0f);
 
         platformShader.setVec3("spotLight.position", programState->camera.Position);
         platformShader.setVec3("spotLight.direction", programState->camera.Front);
