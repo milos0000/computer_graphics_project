@@ -59,8 +59,8 @@ struct ProgramState {
     Camera camera;
     bool spotLightEnabled = false;
     bool CameraMouseMovementUpdateEnabled = true;
-    glm::vec3 cupPosition = glm::vec3(0.0f);
-    float cupScale = 1.0f;
+    glm::vec3 cupPosition = glm::vec3(0.0f, 0.0f, -4.0f);
+    float cupScale = 0.5f;
     PointLight pointLight;
     ProgramState()
             : camera(glm::vec3(0.0f, 0.0f, 3.0f)) {}
@@ -168,7 +168,7 @@ int main() {
     // -------------------------
     Shader platformShader("resources/shaders/platform.vs", "resources/shaders/platform.fs");
     Shader cupShader("resources/shaders/cups_lighting.vs", "resources/shaders/cups_lighting.fs");
-
+    Shader grassShader("resources/shaders/grass.vs", "resources/shaders/grass.fs");
     float platformVertices[] = {
             -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
             0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
@@ -228,6 +228,17 @@ int main() {
             22, 23, 20
     };
 
+    float grassVertices[] = {
+            // positions         // texture Coords (swapped y coordinates because texture is flipped upside down)
+            0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
+            0.0f, -0.5f,  0.0f,  0.0f,  1.0f,
+            1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
+
+            0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
+            1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
+            1.0f,  0.5f,  0.0f,  1.0f,  0.0f
+    };
+
     float legPositions [] = {
             -7.0, -8.0, -10.5,
             -7.0, -8.0, 1.60,
@@ -235,6 +246,10 @@ int main() {
             5.0, -8.0, 1.60
     };
 
+    float grassPotPosition[] = {0.0f, 1.25f, 1.0f};
+    float grassPosition[] = {-1.0f, 5.3f, 3.8f};
+
+    //platform
     unsigned int platformVAO, platformVBO, platformEBO;
     glGenVertexArrays(1, &platformVAO);
     glGenBuffers(1, &platformVBO);
@@ -260,16 +275,38 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
+    //grass
+    unsigned int grassVAO, grassVBO;
+    glGenVertexArrays(1, &grassVAO);
+    glGenBuffers(1, &grassVBO);
+    glBindVertexArray(grassVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, grassVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(grassVertices), grassVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glBindVertexArray(0);
+
     platformShader.use();
     unsigned int platformDiffuse = load2DTexture(FileSystem::getPath("resources/textures/Stylized_Crate_002_basecolor.jpg").c_str());
     platformShader.setInt("material.diffuse", 0);
     unsigned int platformSpecular = load2DTexture(FileSystem::getPath("resources/textures/Stylized_Crate_002_metallic.jpg").c_str());
     platformShader.setInt("material.specular", 1);
-    unsigned int legDiffuse = load2DTexture(FileSystem::getPath("resources/textures/wood.png").c_str());
+    unsigned int legDiffuse = load2DTexture(FileSystem::getPath("resources/textures/toy_box_diffuse.png").c_str());
+    unsigned int land = load2DTexture(FileSystem::getPath("resources/textures/pot.png").c_str());
+    unsigned int plastic = load2DTexture(FileSystem::getPath("resources/textures/saksija.jpg").c_str());
 
     cupShader.use();
     unsigned int cupsDiffuse = load2DTexture(FileSystem::getPath("resources/objects/cup/coffee_cup.jpg").c_str());
     cupShader.setInt("material.texture_diffuse1", 2);
+
+    stbi_set_flip_vertically_on_load(false);
+    grassShader.use();
+    unsigned int grass = load2DTexture(FileSystem::getPath("resources/textures/grass.png").c_str());
+    grassShader.setInt("texture1", 3);
+    stbi_set_flip_vertically_on_load(true);
+
 
     // load models
     // -----------
@@ -309,7 +346,6 @@ int main() {
         // ------
         glClearColor(programState->clearColor.r, programState->clearColor.g, programState->clearColor.b, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         cupShader.use();
         pointLight.position = glm::vec3(4.0f, 4.0f, 4.0f);
         cupShader.setVec3("pointLight.position", pointLight.position);
@@ -374,18 +410,13 @@ int main() {
         platformShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
         platformShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
 
-        glm::mat4 platformModel         = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-        glm::mat4 platformView          = glm::mat4(1.0f);
-        glm::mat4 platformProjection    = glm::mat4(1.0f);
-        platformModel = glm::translate(platformModel, glm::vec3(-1.0f, -1.0f, -4.5f));
-        platformModel = glm::scale(platformModel, glm::vec3(15.0, 2.0, 15.0));
-        platformView  = programState->camera.GetViewMatrix();
-        platformProjection = glm::perspective(glm::radians(programState->camera.Zoom),
-                                              (float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f, 100.0f);
+        model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+        model = glm::translate(model, glm::vec3(-1.0f, -1.0f, -4.5f));
+        model = glm::scale(model, glm::vec3(15.0, 2.0, 15.0));
 
-        platformShader.setMat4("model", platformModel);
-        platformShader.setMat4("view", platformView);
-        platformShader.setMat4("projection", platformProjection);
+        platformShader.setMat4("model", model);
+        platformShader.setMat4("view", view);
+        platformShader.setMat4("projection", projection);
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, platformDiffuse);
@@ -396,23 +427,49 @@ int main() {
         glBindVertexArray(platformVAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        //legs
         for(int i = 0; i < 4; i++){
-            platformModel = glm::mat4(1.0f);
-            platformView = glm::mat4(1.0f);
-            platformProjection = glm::mat4(1.0f);
-            platformModel = glm::translate(platformModel, glm::vec3(legPositions[i*3], legPositions[i*3+1], legPositions[i*3+2]));
-            platformModel = glm::scale(platformModel, glm::vec3(2.0, 15.0, 2.0));
-            platformView  = programState->camera.GetViewMatrix();
-            platformProjection = glm::perspective(glm::radians(programState->camera.Zoom),
-                                                  (float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f, 100.0f);
-
-            platformShader.setMat4("model", platformModel);
-            platformShader.setMat4("view", platformView);
-            platformShader.setMat4("projection", platformProjection);
+            model = glm::mat4(1.0f);
+            model = glm::translate(model, glm::vec3(legPositions[i*3], legPositions[i*3+1], legPositions[i*3+2]));
+            model = glm::scale(model, glm::vec3(2.0, 15.0, 2.0));
+            platformShader.setMat4("model", model);
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, legDiffuse);
             glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         }
+
+        //pot
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(grassPotPosition[0], grassPotPosition[1], grassPotPosition[2]));
+        model = glm::scale(model, glm::vec3(2.5, 2.5, 2.5));
+        platformShader.setMat4("model", model);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, plastic);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+        //land
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(grassPotPosition[0], grassPotPosition[1] + 1.28f, grassPotPosition[2]));
+        model = glm::scale(model, glm::vec3(2.5, 0.05, 2.5));
+        platformShader.setMat4("model", model);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, land);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+        //grass
+        grassShader.use();
+        glBindVertexArray(grassVAO);
+        glActiveTexture(GL_TEXTURE3);
+        glBindTexture(GL_TEXTURE_2D, grass);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(grassPosition[0], grassPosition[1], grassPosition[2]));
+        model = glm::rotate(model, 45.0f, glm::vec3(0.0f, 2.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(5.5, 5.5, 5.5));
+        grassShader.setMat4("model", model);
+        grassShader.setMat4("view", view);
+        grassShader.setMat4("projection", projection);
+
+        glDrawArrays(GL_TRIANGLES, 0, 6);
 
         if (programState->ImGuiEnabled)
             DrawImGui(programState);
