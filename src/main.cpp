@@ -163,6 +163,8 @@ int main() {
     // configure global opengl state
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
 
     // build and compile shaders
     // -------------------------
@@ -214,18 +216,18 @@ int main() {
     };
 
     unsigned int platformIndices [] = {
-            0, 1, 2,
-            2, 3, 0,
+            0, 2, 1,
+            2, 0, 3,
             4, 5, 6,
             6, 7, 4,
             8, 9, 10,
             10, 11, 8,
-            12, 13, 14,
-            14, 15, 12,
+            12, 14, 13,
+            14, 12, 15,
             16, 17, 18,
             18, 19, 16,
-            20, 21, 22,
-            22, 23, 20
+            20, 22, 21,
+            22, 20, 23
     };
 
     float grassVertices[] = {
@@ -346,6 +348,7 @@ int main() {
         // ------
         glClearColor(programState->clearColor.r, programState->clearColor.g, programState->clearColor.b, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glEnable(GL_CULL_FACE);
         cupShader.use();
         pointLight.position = glm::vec3(4.0f, 4.0f, 4.0f);
         cupShader.setVec3("pointLight.position", pointLight.position);
@@ -457,6 +460,7 @@ int main() {
         glBindTexture(GL_TEXTURE_2D, land);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         //grass
+        glDisable(GL_CULL_FACE);
         grassShader.use();
         glBindVertexArray(grassVAO);
         glActiveTexture(GL_TEXTURE3);
