@@ -57,6 +57,7 @@ struct ProgramState {
     glm::vec3 clearColor = glm::vec3(0);
     bool ImGuiEnabled = false;
     Camera camera;
+    bool spotLightEnabled = false;
     bool CameraMouseMovementUpdateEnabled = true;
     glm::vec3 cupPosition = glm::vec3(0.0f);
     float cupScale = 1.0f;
@@ -75,6 +76,7 @@ void ProgramState::SaveToFile(std::string filename) {
         << clearColor.g << '\n'
         << clearColor.b << '\n'
         << ImGuiEnabled << '\n'
+        << spotLightEnabled << '\n'
         << camera.Position.x << '\n'
         << camera.Position.y << '\n'
         << camera.Position.z << '\n'
@@ -90,6 +92,7 @@ void ProgramState::LoadFromFile(std::string filename) {
            >> clearColor.g
            >> clearColor.b
            >> ImGuiEnabled
+           >> spotLightEnabled
            >> camera.Position.x
            >> camera.Position.y
            >> camera.Position.z
@@ -259,10 +262,11 @@ int main() {
     cupShader.use();
     unsigned int cupsDiffuse = load2DTexture(FileSystem::getPath("resources/objects/cup/coffee_cup.jpg").c_str());
     cupShader.setInt("material.texture_diffuse1", 2);
+
     // load models
     // -----------
-    Model cupModel("resources/objects/cup/coffee_cup.obj");
-    cupModel.SetShaderTextureNamePrefix("material.");
+    Model cupObject("resources/objects/cup/coffee_cup.obj");
+    cupObject.SetShaderTextureNamePrefix("material.");
 
     PointLight& pointLight = programState->pointLight;
     pointLight.position = glm::vec3(4.0f, 4.0, 0.0);
@@ -327,16 +331,40 @@ int main() {
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, cupsDiffuse);
 
-        cupModel.Draw(cupShader);
+        cupObject.Draw(cupShader);
 
         platformShader.use();
 
-        platformShader.setVec3("light.position", pointLight.position);
-        platformShader.setVec3("light.ambient", pointLight.ambient);
-        platformShader.setVec3("light.diffuse", pointLight.diffuse);
-        platformShader.setVec3("light.specular", pointLight.specular);
+        platformShader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
+        platformShader.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
+        platformShader.setVec3("dirLight.diffuse", 0.15f, 0.15f, 0.15f);
+        platformShader.setVec3("dirLight.specular", 0.3f, 0.3f, 0.3f);
+
+        platformShader.setVec3("pointLight.position", pointLight.position);
+        platformShader.setVec3("pointLight.ambient", pointLight.ambient);
+        platformShader.setVec3("pointLight.diffuse", pointLight.diffuse);
+        platformShader.setVec3("pointLight.specular", pointLight.specular);
+        platformShader.setFloat("pointLight.constant", pointLight.constant);
+        platformShader.setFloat("pointLight.linear", pointLight.linear);
+        platformShader.setFloat("pointLight.quadratic", pointLight.quadratic);
         platformShader.setVec3("viewPos", programState->camera.Position);
         platformShader.setFloat("material.shininess", 3.0f);
+
+        platformShader.setVec3("spotLight.position", programState->camera.Position);
+        platformShader.setVec3("spotLight.direction", programState->camera.Front);
+        platformShader.setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
+        if(programState->spotLightEnabled){
+            platformShader.setVec3("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
+            platformShader.setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
+        }else{
+            platformShader.setVec3("spotLight.diffuse", 0.0f, 0.0f, 0.0f);
+            platformShader.setVec3("spotLight.specular", 0.0f, 0.0f, 0.0f);
+        }
+        platformShader.setFloat("spotLight.constant", 1.0f);
+        platformShader.setFloat("spotLight.linear", 0.09);
+        platformShader.setFloat("spotLight.quadratic", 0.032);
+        platformShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
+        platformShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
 
         glm::mat4 platformModel         = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
         glm::mat4 platformView          = glm::mat4(1.0f);
@@ -477,6 +505,9 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
         } else {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         }
+    }
+    if(key == GLFW_KEY_F && action == GLFW_PRESS){
+        programState->spotLightEnabled = !programState->spotLightEnabled;
     }
 }
 unsigned int load2DTexture(char const * path)
