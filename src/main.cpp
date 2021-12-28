@@ -228,6 +228,13 @@ int main() {
             22, 23, 20
     };
 
+    float legPositions [] = {
+            -7.0, -8.0, -10.5,
+            -7.0, -8.0, 1.60,
+            5.0, -8.0, -10.5,
+            5.0, -8.0, 1.60
+    };
+
     unsigned int platformVAO, platformVBO, platformEBO;
     glGenVertexArrays(1, &platformVAO);
     glGenBuffers(1, &platformVBO);
@@ -258,6 +265,7 @@ int main() {
     platformShader.setInt("material.diffuse", 0);
     unsigned int platformSpecular = load2DTexture(FileSystem::getPath("resources/textures/Stylized_Crate_002_metallic.jpg").c_str());
     platformShader.setInt("material.specular", 1);
+    unsigned int legDiffuse = load2DTexture(FileSystem::getPath("resources/textures/wood.png").c_str());
 
     cupShader.use();
     unsigned int cupsDiffuse = load2DTexture(FileSystem::getPath("resources/objects/cup/coffee_cup.jpg").c_str());
@@ -387,6 +395,24 @@ int main() {
         // don't forget to enable shader before setting uniforms
         glBindVertexArray(platformVAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+        for(int i = 0; i < 4; i++){
+            platformModel = glm::mat4(1.0f);
+            platformView = glm::mat4(1.0f);
+            platformProjection = glm::mat4(1.0f);
+            platformModel = glm::translate(platformModel, glm::vec3(legPositions[i*3], legPositions[i*3+1], legPositions[i*3+2]));
+            platformModel = glm::scale(platformModel, glm::vec3(2.0, 15.0, 2.0));
+            platformView  = programState->camera.GetViewMatrix();
+            platformProjection = glm::perspective(glm::radians(programState->camera.Zoom),
+                                                  (float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f, 100.0f);
+
+            platformShader.setMat4("model", platformModel);
+            platformShader.setMat4("view", platformView);
+            platformShader.setMat4("projection", platformProjection);
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, legDiffuse);
+            glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+        }
 
         if (programState->ImGuiEnabled)
             DrawImGui(programState);
