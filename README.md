@@ -14,4 +14,5 @@ Project done for the computer graphics university course (Mathematical Faculty, 
 
 # credits
 Coffee cup - abringo https://free3d.com/3d-model/coffee-cup-773339.html
+Hotel room cubemap - humus http://www.humus.name/index.php?page=Cubemap&item=DallasW
 
