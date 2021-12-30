@@ -17,3 +17,4 @@ Coffee cup - abringo https://free3d.com/3d-model/coffee-cup-773339.html
 
 Hotel room cubemap - humus http://www.humus.name/index.php?page=Cubemap&item=DallasW
 
+Table material - https://3dtextures.me/2021/12/20/stylized-crate-002/
