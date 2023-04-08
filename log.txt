@@ -1,0 +1,30 @@
+/home/milos/Desktop/cozy_night_table/src/main.cpp:1:10: error: 'imgui.h' file not found [clang-diagnostic-error]
+#include "imgui.h"
+         ^~~~~~~~~
+/home/milos/Desktop/cozy_night_table/src/main.cpp:183:5: warning: do not declare C-style arrays, use std::array<> instead [modernize-avoid-c-arrays]
+    float skyboxVertices[] = {
+    ^
+/home/milos/Desktop/cozy_night_table/src/main.cpp:228:5: warning: do not declare C-style arrays, use std::array<> instead [modernize-avoid-c-arrays]
+    float platformVertices[] = {
+    ^
+/home/milos/Desktop/cozy_night_table/src/main.cpp:260:5: warning: do not declare C-style arrays, use std::array<> instead [modernize-avoid-c-arrays]
+    unsigned int platformIndices [] = {
+    ^
+/home/milos/Desktop/cozy_night_table/src/main.cpp:275:5: warning: do not declare C-style arrays, use std::array<> instead [modernize-avoid-c-arrays]
+    float grassVertices[] = {
+    ^
+/home/milos/Desktop/cozy_night_table/src/main.cpp:286:5: warning: do not declare C-style arrays, use std::array<> instead [modernize-avoid-c-arrays]
+    float legPositions [] = {
+    ^
+/home/milos/Desktop/cozy_night_table/src/main.cpp:293:5: warning: do not declare C-style arrays, use std::array<> instead [modernize-avoid-c-arrays]
+    float grassPotPosition[] = {0.0f, 1.25f, 1.0f};
+    ^
+/home/milos/Desktop/cozy_night_table/src/main.cpp:294:5: warning: do not declare C-style arrays, use std::array<> instead [modernize-avoid-c-arrays]
+    float grassPosition[] = {-1.0f, 5.3f, 3.8f};
+    ^
+/home/milos/Desktop/cozy_night_table/src/main.cpp:324:5: warning: do not declare C-style arrays, use std::array<> instead [modernize-avoid-c-arrays]
+    unsigned int attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
+    ^
+/home/milos/Desktop/cozy_night_table/src/main.cpp:659:9: warning: do not declare C-style arrays, use std::array<> instead [modernize-avoid-c-arrays]
+        float quadVertices[] = {
+        ^
