@@ -2,8 +2,9 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
-#include <GLFW/glfw3.h>
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -67,7 +68,7 @@ struct ProgramState {
 	glm::vec3 cupPosition = glm::vec3(0.0f, 0.0f, -4.0f);
 	float cupScale = 0.5f;
 	PointLight pointLight;
-	ProgramState() : camera(glm::vec3(0.0f, 0.0f, 3.0f)) = default;
+	ProgramState() : camera(glm::vec3(0.0f, 0.0f, 3.0f)) {};
 
 	void SaveToFile(std::string filename);
 
